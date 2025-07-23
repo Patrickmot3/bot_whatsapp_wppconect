@@ -1,76 +1,74 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Mensagens | QR Code</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-slide-in {
-            animation: slideIn 0.4s ease-out;
-        }
-        .status-logado { color: #16a34a; font-weight: bold; }
-        .status-nao-logado { color: #dc2626; font-weight: bold; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema de Mensagens | QR Code</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-slide-in {
+      animation: slideIn 0.4s ease-out;
+    }
+    .status-logado { color: #16a34a; font-weight: bold; }
+    .status-nao-logado { color: #dc2626; font-weight: bold; }
+    .status-erro { color: #f97316; font-weight: bold; }
+  </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-green-50 via-white to-purple-50 flex items-center justify-center p-4">
 
-    <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md animate-slide-in text-center space-y-6">
-        <img src="{{ url_for('static', filename='out.png') }}" alt="QR Code" class="w-48 h-48 mx-auto rounded-lg shadow-md">
+  <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md animate-slide-in text-center space-y-6">
+    <img src="https://bot-whatsapp-wppconect-1.onrender.com/static/out.png" alt="QR Code" class="w-48 h-48 mx-auto rounded-lg shadow-md" id="qrcode-img">
 
-        <div class="text-sm text-gray-600 space-y-1">
-            <p><strong>Status:</strong> <span id="status-text">{{ 'Logado' if logado else 'Não Logado' }}</span></p>
-            <p><strong>Gerado em:</strong> <span id="data-text">{{ data_qr }}</span></p>
-        </div>
-
-        <form action="/prosseguir" method="POST">
-            <button type="submit" class="bg-[#1AAE55] hover:bg-[#25D366] text-white font-medium py-2.5 px-6 rounded-lg shadow-md transition-colors">
-                Prosseguir
-            </button>
-        </form>
+    <div class="text-sm text-gray-600 space-y-1">
+      <p><strong>Status:</strong> <span id="status-text" class="status-nao-logado">Carregando...</span></p>
+      <p><strong>Gerado em:</strong> <span id="data-text">--</span></p>
     </div>
 
-    <script>
-        const statusElement = document.getElementById('status-text');
-        const dataElement = document.getElementById('data-text');
+    <form action="/prosseguir" method="POST">
+      <button type="submit" class="bg-[#1AAE55] hover:bg-[#25D366] text-white font-medium py-2.5 px-6 rounded-lg shadow-md transition-colors">
+        Prosseguir
+      </button>
+    </form>
+  </div>
 
-        // Função para verificar o status
-        async function fetchStatus() {
-            try {
-                const response = await fetch('/check_status');
-                const data = await response.json();
+  <script>
+    const statusElement = document.getElementById('status-text');
+    const dataElement = document.getElementById('data-text');
+    const statusUrl = 'https://bot-whatsapp-wppconect-1.onrender.com/static/status.json';
 
-                // Atualiza o texto e a cor do status
-                if (data.logado) {
-                    statusElement.textContent = 'Logado';
-                    statusElement.className = 'status-logado';
-                } else {
-                    statusElement.textContent = 'Não Logado (Escaneie o QR Code)';
-                    statusElement.className = 'status-nao-logado';
-                }
-                
-                // Atualiza a data
-                dataElement.textContent = data.data;
+    async function fetchStatus() {
+      try {
+        const response = await fetch(statusUrl, { cache: "no-store" });
+        if (!response.ok) throw new Error('Status não OK');
 
-            } catch (error) {
-                console.error('Erro ao buscar status:', error);
-                statusElement.textContent = 'Erro de conexão';
-            }
+        const data = await response.json();
+
+        if (data.logado) {
+          statusElement.textContent = 'Logado';
+          statusElement.className = 'status-logado';
+        } else {
+          statusElement.textContent = 'Não Logado (Escaneie o QR Code)';
+          statusElement.className = 'status-nao-logado';
         }
 
-        // Verifica o status a cada 3 segundos
-        setInterval(fetchStatus, 3000);
+        dataElement.textContent = data.data || '--';
+      } catch (error) {
+        console.error('Erro ao buscar status:', error);
+        statusElement.textContent = 'Erro ao conectar com o servidor';
+        statusElement.className = 'status-erro';
+        dataElement.textContent = '--';
+      }
+    }
 
-        // Roda a função uma vez assim que a página carrega
-        fetchStatus();
-    </script>
-    </body>
+    setInterval(fetchStatus, 3000);
+    fetchStatus();
+  </script>
+
+</body>
 </html>

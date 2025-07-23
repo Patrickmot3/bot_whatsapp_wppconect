@@ -1,36 +1,29 @@
-import subprocess
-import requests # Importe a biblioteca
+import requests
 
-# URL do seu servidor Node.js
-WHATSAPP_API_URL = "http://localhost:3000/enviar"
+# Nova URL do servidor Node.js hospedado no Render
+WHATSAPP_API_URL = "https://bot-whatsapp-wppconect-1.onrender.com/enviar"
 
 def gerar_qrcode():
     """
-    Esta função agora deve apenas garantir que o servidor Node.js esteja rodando.
-    Você deve iniciá-lo manualmente ou usar uma ferramenta como o 'concurrently' para
-    iniciar o servidor Flask e o Node juntos.
+    Função de informação — o QR code é gerado ao acessar o endpoint ou iniciar o servidor Node.js.
     """
-    print("ℹ️  Certifique-se de que o 'whatsapp_server.js' está em execução.")
-    # Não é mais necessário executar o script 'gerarQR.js' daqui.
-    # O servidor Node.js cuidará disso ao ser iniciado.
-    # Exemplo: subprocess.Popen(['node', 'whatsapp_server.js'])
-    # Mas a melhor prática é rodá-lo separadamente.
+    print("ℹ️  Certifique-se de que o servidor Node.js na Render está em execução.")
+    print("URL do servidor:", WHATSAPP_API_URL.replace("/enviar", ""))
 
 def enviar_mensagens_whatsapp():
     """
-    Esta função agora envia uma requisição HTTP para o servidor Node.js.
+    Envia uma requisição HTTP POST para o servidor Node.js publicado na Render.
     """
     try:
-        # Apenas aciona o endpoint. O servidor Node buscará os dados do DB.
         response = requests.post(WHATSAPP_API_URL)
-        
+
         if response.status_code == 200:
-            print("✅ Requisição de envio enviada com sucesso para o servidor Node.js.")
-            print("Resposta do servidor:", response.json())
+            print("✅ Requisição enviada com sucesso para o servidor Node.js.")
+            print("Resposta:", response.json())
         else:
             print("❌ Erro ao enviar requisição para o servidor Node.js.")
             print("Status:", response.status_code)
             print("Resposta:", response.text)
-            
+
     except requests.exceptions.RequestException as e:
         print(f"❌ Falha ao conectar com o servidor Node.js: {e}")

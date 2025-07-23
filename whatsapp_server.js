@@ -89,7 +89,10 @@ app.post('/enviar', (req, res) => {
   });
 });
 
-// 3. Inicia o servidor Express para ouvir as requisições do Flask
+// 3. Servir arquivos estáticos (como QR code e status)
+app.use('/static', express.static(path.join(__dirname, 'static')));
+
+// 4. Inicia o servidor Express para ouvir as requisições do Flask
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Servidor Node.js para WhatsApp rodando na porta ${PORT}`);
