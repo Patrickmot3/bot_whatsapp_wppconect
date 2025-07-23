@@ -1,9 +1,6 @@
-2025/07/23-10:44:58.184 3670 Reusing MANIFEST C:\Users\Contabilidade.23\Documents\Projetos_vscode\bot_whatsapp_wppconect\tokens\sessionName321\Default\Local Storage\leveldb/MANIFEST-000001
-2025/07/23-10:44:58.191 3670 Recovering log #3
-2025/07/23-10:44:58.194 3670 Reusing old log C:\Users\Contabilidade.23\Documents\Projetos_vscode\bot_whatsapp_wppconect\tokens\sessionName321\Default\Local Storage\leveldb/000003.log 
-2025/07/23-11:32:58.464 898 Level-0 table #5: started
-2025/07/23-11:32:58.471 898 Level-0 table #5: 17915 bytes OK
-2025/07/23-11:32:58.474 898 Delete type=0 #3
-2025/07/23-13:29:58.515 898 Level-0 table #7: started
-2025/07/23-13:29:58.520 898 Level-0 table #7: 12329 bytes OK
-2025/07/23-13:29:58.524 898 Delete type=0 #4
+2025/07/23-15:11:41.416 3a08 Reusing MANIFEST C:\Users\Contabilidade.23\Documents\Projetos_vscode\bot_whatsapp_wppconect\tokens\sessionName321\Default\Local Storage\leveldb/MANIFEST-000001
+2025/07/23-15:11:41.423 3a08 Recovering log #6
+2025/07/23-15:11:41.425 3a08 Reusing old log C:\Users\Contabilidade.23\Documents\Projetos_vscode\bot_whatsapp_wppconect\tokens\sessionName321\Default\Local Storage\leveldb/000006.log 
+2025/07/23-16:06:40.207 f6c Level-0 table #10: started
+2025/07/23-16:06:40.212 f6c Level-0 table #10: 12211 bytes OK
+2025/07/23-16:06:40.215 f6c Delete type=0 #6
