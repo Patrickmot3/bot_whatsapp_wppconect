@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizar Anexos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .buttons {
+            margin-top: 20px;
+        }
+        .buttons button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .buttons .voltar {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+        }
+        .buttons .confirmar {
+            background-color: #28a745;
+            color: white;
+            border: 1px solid #28a745;
+        }
+    </style>
+</head>
+<body>
+    <h1>Visualização de Anexos</h1>
+    
+    <!-- Tabela para exibir os anexos -->
+    <table>
+        <thead>
+            <tr>
+                <th>Empresa</th>
+                <th>Caminho da Pasta</th>
+                <th>Nome do Anexo</th>
+                <th>Data de Modificação</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Itera sobre os anexos passados do Flask -->
+            {% for anexo in anexos %}
+            <tr>
+                <td>{{ anexo[0] }}</td>
+                <td>{{ anexo[2] }}</td>
+                <td>{{ anexo[3] }}</td>
+                <td>{{ anexo[5] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Botões de ação -->
+    <div class="buttons">
+        <!-- Botão Confirmar envio dos Mensagens -->
+        <a href="{{ url_for('visualizar_destinatarios') }}">
+            <button class="confirmar">Visualizar destinatários</button>
+        </a>
+        
+        <!-- Botão Voltar -->
+        <button class="voltar" onclick="window.history.back();">Voltar</button>
+    </div>
+
+</body>
+</html>

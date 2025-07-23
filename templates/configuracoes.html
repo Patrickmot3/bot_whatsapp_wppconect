@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações de E-mail</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            color: #2d3748;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        h1 {
+            color: #1a202c;
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #3182ce, #63b3ed);
+            border-radius: 3px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center; /* Alinha os itens verticalmente */
+            justify-content: space-between; /* Deixa espaço entre o label e o input */
+        }
+
+        label {
+            font-weight: 500;
+            color: #4a5568;
+            font-size: 0.875rem;
+            margin-right: 1rem; /* Espaço entre o label e o input */
+            flex: 1; /* Tamanho proporcional para o label */
+        }
+
+        input[type="text"],
+        input[type="password"],
+        select {
+            flex: 2; /* Tamanho proporcional para o input */
+            padding: 0.75rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            background-color: #f8fafc;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #3182ce;
+            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+            background-color: white;
+        }
+
+        .required {
+            color: #718096;
+            font-size: 0.75rem;
+            margin-left: 0.5rem;
+        }
+
+        .buttons-container {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background-color: #3182ce;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background-color: #2c5282;
+        }
+
+        .btn-danger {
+            background-color: #e53e3e;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c53030;
+        }
+
+        .btn-secondary {
+            background-color: #718096;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #4a5568;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            .form-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .buttons-container {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Configurações de E-mail</h1>
+        
+        <form action="/configuracoes" method="post">
+            <div class="form-group">
+                <label for="servidor_smtp">Servidor SMTP</label>
+                <input type="text" id="servidor_smtp" name="servidor_smtp" value="{{ configuracao[0] if configuracao else '' }}" required placeholder="Ex: smtp.gmail.com">
+            </div>
+
+            <div class="form-group">
+                <label for="servidor_imap">Servidor IMAP</label>
+                <input type="text" id="servidor_imap" name="servidor_imap" value="{{ configuracao[1] if configuracao else '' }}" required placeholder="Ex: imap.gmail.com">
+            </div>
+
+            <div class="form-group">
+                <label for="porta_smtp">Porta SMTP</label>
+                <input type="text" id="porta_smtp" name="porta_smtp" value="{{ configuracao[2] if configuracao else '' }}" required placeholder="Ex: 587">
+            </div>
+
+            <div class="form-group">
+                <label for="remetente_email">E-mail do Remetente</label>
+                <input type="text" id="remetente_email" name="remetente_email" value="{{ configuracao[3] if configuracao else '' }}" required placeholder="seu.email@exemplo.com">
+            </div>
+
+            <div class="form-group">
+                <label for="senha">Senha</label>
+                <input type="password" id="senha" name="senha" value="{{ configuracao[4] if configuracao else '' }}" required placeholder="Digite sua senha">
+            </div>
+
+            <div class="form-group">
+                <label for="caminho_assinatura">Caminho da Assinatura</label>
+                <input type="text" id="caminho_assinatura" name="caminho_assinatura" value="{{ configuracao[5] if configuracao else '' }}" placeholder="/caminho/para/assinatura.html">
+            </div>
+            
+            <div class="form-group">
+                <label for="intervalo_busca">Intervalo de Busca</label>
+                <input type="text" id="intervalo_busca" name="intervalo_busca" value="{{ configuracao[6] if configuracao else '' }}" placeholder="Ex: 30">
+                <span class="required">*Dias</span>
+            </div>
+
+            <div class="buttons-container">
+                <button type="submit" class="btn btn-primary">Salvar Configurações</button>
+                
+                {% if configuracao %}
+                <form action="/excluir_configuracao" method="post" style="flex: 1;">
+                    <button type="submit" class="btn btn-danger" style="width: 100%">Excluir Configuração</button>
+                </form>
+                {% endif %}
+                
+                <a href="/envio_mensagem" class="btn btn-secondary">Voltar</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

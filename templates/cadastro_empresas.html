@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Empresas | Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .form-select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+        .table-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .hover-scale {
+            transition: transform 0.2s ease;
+        }
+        .hover-scale:hover {
+            transform: scale(1.02);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-green-50 via-white to-purple-50">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">Cadastro de Empresas</h1>
+                    <p class="text-gray-600 mt-1">Gerencie o cadastro de empresas no sistema</p>
+                </div>
+                <a href="/envio_mensagem" class="inline-flex items-center px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Voltar
+                </a>
+            </div>
+
+            <!-- Form Card -->
+            <div class="bg-white rounded-xl shadow-md p-6 mb-8 animate-fade-in">
+                <form id="cadastroForm" action="/cadastro_empresas" method="post" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="Empresa" class="block text-sm font-medium text-gray-700 mb-1">Empresa</label>
+                        <input type="text" id="Empresa" name="Empresa" required
+                               class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                    </div>
+
+                    <div>
+                        <label for="Grupo" class="block text-sm font-medium text-gray-700 mb-1">Grupo</label>
+                        <select id="Grupo" name="Grupo" required
+                                class="form-select w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            {% for grupo in lista_grupo %}
+                                <option value="{{ grupo }}">{{ grupo }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="Atividade" class="block text-sm font-medium text-gray-700 mb-1">Atividade</label>
+                        <select id="Atividade" name="Atividade" required
+                                class="form-select w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            {% for atividade in lista_atividade %}
+                                <option value="{{ atividade }}">{{ atividade }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="Folha" class="block text-sm font-medium text-gray-700 mb-1">Folha</label>
+                        <select id="Folha" name="Folha"
+                                class="form-select w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            {% for folha in lista_folha %}
+                                <option value="{{ folha }}">{{ folha }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="Email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="text" id="Email" name="Email" required
+                               class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                    </div>
+
+                    <div>
+                        <label for="Marcar" class="block text-sm font-medium text-gray-700 mb-1">Marcar</label>
+                        <select id="Marcar" name="Marcar"
+                                class="form-select w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            <option value=""> </option>
+                            <option value="Sim">Sim</option>
+                        </select>
+                    </div>
+
+                    <input type="hidden" id="empresaId" name="empresaId">
+
+                    <div class="md:col-span-2 flex gap-4">
+                        <button type="submit" class="flex-1 bg-[#1AAE55] text-white py-2 px-4 rounded-lg hover:bg-[#25D366] focus:ring-4 focus:ring-green-500/50 transition-colors font-medium hover-scale">
+                            Incluir empresa
+                        </button>
+                        <button type="button" id="editButton" style="display: none"
+                                class="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 focus:ring-4 focus:ring-green-500/50 transition-colors font-medium hover-scale"
+                                onclick="editarEmpresa()">
+                            Editar empresa
+                        </button>
+                        <button type="button" id="deleteButton" style="display: none"
+                                class="flex-1 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 focus:ring-4 focus:ring-red-500/50 transition-colors font-medium hover-scale"
+                                onclick="excluirEmpresa()">
+                            Excluir empresa
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="mb-6">
+                <div class="relative">
+                    <input type="text" id="filtro" placeholder="Buscar empresas..."
+                           class="w-full pl-10 pr-4 py-2 rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                    <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="table-container">
+                    <table id="tabelaEmpresas" class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Empresa</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Grupo</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Atividade</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Folha</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Marcar</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for empresa in empresas %}
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ empresa[0] }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ empresa[1] }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ empresa[2] }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ empresa[3] }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ empresa[4] }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ empresa[5] }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ empresa[6] }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                    <button onclick="selecionarEmpresa('{{ empresa[0] }}', '{{ empresa[1] }}', '{{ empresa[2] }}', '{{ empresa[3] }}', '{{ empresa[4] }}', '{{ empresa[5] }}', '{{ empresa[6] }}')"
+                                            class="text-green-600 hover:text-green-900 font-medium">
+                                        Selecionar
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('filtro').addEventListener('keyup', function() {
+            var input = this.value.toLowerCase();
+            var rows = document.querySelectorAll('#tabelaEmpresas tbody tr');
+
+            rows.forEach(function(row) {
+                var text = row.textContent.toLowerCase();
+                row.style.display = text.includes(input) ? '' : 'none';
+            });
+        });
+
+        function selecionarEmpresa(id, nome, grupo, atividade, folha, email, marcar) {
+            document.getElementById('empresaId').value = id;
+            document.getElementById('Empresa').value = nome;
+            document.getElementById('Grupo').value = grupo;
+            document.getElementById('Atividade').value = atividade;
+            document.getElementById('Folha').value = folha;
+            document.getElementById('Email').value = email;
+            document.getElementById('Marcar').value = marcar;
+
+            document.getElementById('editButton').style.display = 'block';
+            document.getElementById('deleteButton').style.display = 'block';
+            document.getElementById('cadastroForm').setAttribute('data-id', id);
+        }
+
+        function editarEmpresa() {
+            document.getElementById('cadastroForm').action = '/editar_empresa';
+            document.getElementById('cadastroForm').submit();
+        }
+
+        function excluirEmpresa() {
+            var id = document.getElementById('cadastroForm').getAttribute('data-id');
+            if (confirm('Tem certeza que deseja excluir esta empresa?')) {
+                window.location.href = '/excluir_empresa/' + id;
+            }
+        }
+    </script>
+</body>
+</html>

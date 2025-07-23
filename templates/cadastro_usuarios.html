@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-green-50 to-indigo-100">
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-md animate-fade-in">
+            <div class="bg-white rounded-2xl shadow-xl p-8 space-y-6">
+                <!-- Header -->
+                <div class="text-center">
+                    <div class="bg-indigo-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-900">Criar nova conta</h2>
+                    <p class="text-gray-500 mt-2">Preencha os dados para se cadastrar</p>
+                </div>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="p-4 rounded-lg {% if category == 'error' %}bg-red-50 text-red-600{% else %}bg-green-50 text-green-600{% endif %}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <!-- Form -->
+                <form action="{{ url_for('cadastro') }}" method="POST" class="space-y-4" id="cadastroForm">
+                    <div class="space-y-2">
+                        <label for="nome" class="block text-sm font-medium text-gray-700">Nome completo</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 3a4 4 0 1 0 0 8 4 4 0 1 0 0-8z"/>
+                                </svg>
+                            </div>
+                            <input type="text" id="nome" name="nome" required
+                                class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-colors bg-gray-50 focus:bg-white"
+                                placeholder="Digite seu nome completo">
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="usuario" class="block text-sm font-medium text-gray-700">Usuário</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 3a4 4 0 1 0 0 8 4 4 0 1 0 0-8z"/>
+                                </svg>
+                            </div>
+                            <input type="text" id="usuario" name="usuario" required
+                                class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-colors bg-gray-50 focus:bg-white"
+                                placeholder="Digite seu usuário">
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="senha" class="block text-sm font-medium text-gray-700">Senha</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M15 7h3a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h3M10 7V5a2 2 0 1 1 4 0v2"/>
+                                </svg>
+                            </div>
+                            <input type="password" id="senha" name="senha" required
+                                class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-colors bg-gray-50 focus:bg-white"
+                                placeholder="Digite sua senha">
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="confirmar_senha" class="block text-sm font-medium text-gray-700">Confirmar Senha</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M15 7h3a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h3M10 7V5a2 2 0 1 1 4 0v2"/>
+                                </svg>
+                            </div>
+                            <input type="password" id="confirmar_senha" name="confirmar_senha" required
+                                class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-colors bg-gray-50 focus:bg-white"
+                                placeholder="Confirme sua senha">
+                        </div>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full flex items-center justify-center px-4 py-2.5 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                        Cadastrar
+                    </button>
+                </form>
+
+                <!-- Footer -->
+                <div class="text-center">
+                    <p class="text-sm text-gray-600">
+                        Já tem uma conta?
+                        <a href="{{ url_for('index') }}" class="font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
+                            Faça login
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('cadastroForm').addEventListener('submit', function(e) {
+            const senha = document.getElementById('senha').value;
+            const confirmarSenha = document.getElementById('confirmar_senha').value;
+            
+            if (senha !== confirmarSenha) {
+                e.preventDefault();
+                alert('As senhas não coincidem!');
+            }
+        });
+    </script>
+</body>
+</html>

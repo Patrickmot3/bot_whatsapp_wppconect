@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Mensagens</title>
+    <style>
+        input[type="text"], table {
+            margin: 0.5px 0;
+        }
+        th, td {
+            padding: 0.5px;
+            line-height: 1.2;
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2px;
+        }
+
+        label {
+            width: 100px;
+            display: inline-block;
+        }
+
+        input[type="text"] {
+            width: 225px;
+        }
+
+        select {
+            width: 225px;
+        }
+
+        button {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cadastro de mensagens</h1>
+    <form id="cadastroForm" action="/cadastro_mensagens" method="post">
+        <!-- Campo para inserir os dados -->
+        <input type="hidden" id="mensagemId" name="mensagemId">
+        <div class="form-group">
+            <label for="Tipo">Tipo:</label>
+            <input type="text" id="Tipo" name="Tipo" required>
+        </div>
+        <div class="form-group">
+            <label for="Mensagem">Mensagem:</label>
+            <input type="text" id="Mensagem" name="Mensagem" required>
+
+            <button type="submit" style="display: inline-block;padding: 5px 10px; background-color: #007bff; color: white; border-radius: 5px;">Incluir Mensagem</button>
+            <button type="button" id="editarBtn" style="display: none; padding: 5px 10px; background-color: #28a745; color: white; border-radius: 5px;" onclick="editarMensagem()">Editar Mensagem</button>
+            <button type="button" id="excluirBtn" style="display: none; padding: 5px 10px; background-color: #dc3545; color: white; border-radius: 5px;" onclick="excluirMensagem()">Excluir Mensagem</button>
+
+        </div>
+
+        <a href="/envio_mensagem" class="btn-voltar" style="display: inline-block; padding: 4px 8px; background-color: #223141b9; color: white; text-decoration: none; border-radius: 5px;">Voltar</a>
+    </form>
+
+    <hr>
+
+    <!-- Campo de filtro -->
+    <label for="filtro">Buscar:</label>
+    <input type="text" id="filtro" placeholder="Filtrar por qualquer campo...">
+
+    <h2>Mensagens cadastradas</h2>
+    <table border="1" id="tabelaMensagens">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tipo</th>
+                <th>Mensagem</th>
+                <th>Selecionar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mensagem in mensagens %}
+            <tr>
+                <td>{{ mensagem[0] }}</td>
+                <td>{{ mensagem[1] }}</td>
+                <td>{{ mensagem[2] }}</td>
+                <td>
+                    <button type="button" onclick="selecionarMensagem('{{ mensagem[0] }}', '{{ mensagem[1] }}', '{{ mensagem[2] }}')">Selecionar</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        // Função de busca em tempo real
+        document.getElementById('filtro').addEventListener('keyup', function() {
+            var input = this.value.toLowerCase();
+            var rows = document.querySelectorAll('#tabelaMensagens tbody tr');
+
+            rows.forEach(function(row) {
+                var text = row.textContent.toLowerCase();
+                row.style.display = text.includes(input) ? '' : 'none';
+            });
+        });
+
+        // Função para selecionar uma mensagem e preencher os campos de cadastro
+        function selecionarMensagem(id, tipo, mensagem) {
+            document.getElementById('mensagemId').value = id;
+            document.getElementById('Tipo').value = tipo;
+            document.getElementById('Mensagem').value = mensagem;
+            document.getElementById('editarBtn').style.display = 'inline-block';
+            document.getElementById('excluirBtn').style.display = 'inline-block';
+
+            // Define o ID da mensagem para as ações de editar/excluir
+            document.getElementById('cadastroForm').setAttribute('data-id', id);
+        }
+
+        // Função para editar a mensagem
+        function editarMensagem() {
+            var id = document.getElementById('cadastroForm').getAttribute('data-id');
+            var formAction = '/editar_mensagem/' + id;
+            document.getElementById('cadastroForm').action = formAction;
+            document.getElementById('cadastroForm').submit();
+        }
+
+        // Função para excluir a mensagem
+        function excluirMensagem() {
+            var id = document.getElementById('cadastroForm').getAttribute('data-id');
+            var confirmacao = confirm('Tem certeza que deseja excluir esta mensagem?');
+            if (confirmacao) {
+                window.location.href = '/excluir_mensagem/' + id;
+            }
+        }
+    </script>
+</body>
+</html>

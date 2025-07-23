@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Mensagem | Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+        .hover-scale {
+            transition: transform 0.2s ease;
+        }
+        .hover-scale:hover {
+            transform: scale(1.02);
+        }
+        .table-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-green-50 via-white to-purple-50">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">Cadastro de Mensagem</h1>
+                    <p class="text-gray-600 mt-1">Gerencie os modelos de Mensagem do sistema</p>
+                </div>
+                <a href="/envio_mensagem" class="inline-flex items-center px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Voltar
+                </a>
+            </div>
+
+            <!-- Form Card -->
+            <div class="bg-white rounded-xl shadow-md p-6 mb-8 animate-fade-in">
+                <form id="cadastroForm" action="/cadastro_email" method="post" class="space-y-6">
+                    <input type="hidden" id="mensagemId" name="mensagemId">
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label for="Assunto" class="block text-sm font-medium text-gray-700 mb-1">
+                                Assunto
+                            </label>
+                            <input type="text" id="Assunto" name="Assunto" required
+                                    placeholder="Variáveis disponíveis: mes_ant_=mes_anterior, mes_=mes_atual, ano_ant_=ano_anterior, ano_=ano_atual, emp_=empresa"
+                                   class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        </div>
+
+                        <div>
+                            <label for="Corpo" class="block text-sm font-medium text-gray-700 mb-1">
+                                Corpo da Mensagem
+                            </label>
+                            <textarea id="Corpo" name="Corpo" required rows="4"
+                                    placeholder="Variáveis disponíveis: mes_ant_=mes_anterior, mes_=mes_atual, ano_ant_=ano_anterior, ano_=ano_atual, emp_=empresa"
+
+                                    class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-green-500 focus:border-transparent"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <button type="submit" class="flex-1 bg-[#1AAE55] text-white py-2 px-4 rounded-lg hover:bg-[#25D366] focus:ring-4 focus:ring-green-500/50 transition-colors font-medium hover-scale">
+                            Incluir Mensagem
+                        </button>
+                        <button type="button" id="editarBtn" style="display: none"
+                                class="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 focus:ring-4 focus:ring-green-500/50 transition-colors font-medium hover-scale"
+                                onclick="editarMensagem()">
+                            Editar Mensagem
+                        </button>
+                        <button type="button" id="excluirBtn" style="display: none"
+                                class="flex-1 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 focus:ring-4 focus:ring-red-500/50 transition-colors font-medium hover-scale"
+                                onclick="excluirMensagem()">
+                            Excluir Mensagem
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="mb-6">
+                <div class="relative">
+                    <input type="text" id="filtro" placeholder="Buscar mensagens..."
+                           class="w-full pl-10 pr-4 py-2 rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                    <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="table-container">
+                    <table id="tabelaMensagens" class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assunto</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Corpo</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for mensagem in mensagens %}
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ mensagem[0] }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ mensagem[1] }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">
+                                    <div class="max-w-xl overflow-hidden overflow-ellipsis">
+                                        {{ mensagem[2] }}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                    <button onclick="selecionarMensagem('{{ mensagem[0] }}', '{{ mensagem[1] }}', '{{ mensagem[2] }}')"
+                                            class="text-green-600 hover:text-green-900 font-medium">
+                                        Selecionar
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('filtro').addEventListener('input', function() {
+            const filterValue = this.value.toLowerCase().trim();
+            const rows = document.querySelectorAll('#tabelaMensagens tbody tr');
+
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                let rowText = '';
+
+                cells.forEach(cell => {
+                    rowText += cell.textContent.toLowerCase();
+                });
+
+                row.style.display = rowText.includes(filterValue) ? '' : 'none';
+            });
+        });
+
+        function selecionarMensagem(id, assunto, mensagem) {
+            document.getElementById('mensagemId').value = id;
+            document.getElementById('Assunto').value = assunto;
+            document.getElementById("Corpo").value = mensagem.replace(/\n/g, '\\n');
+
+
+            document.getElementById('editarBtn').style.display = 'block';
+            document.getElementById('excluirBtn').style.display = 'block';
+            document.getElementById('cadastroForm').setAttribute('data-id', id);
+        }
+
+        function editarMensagem() {
+            const id = document.getElementById('cadastroForm').getAttribute('data-id');
+            document.getElementById('cadastroForm').action = '/editar_email/' + id;
+            document.getElementById('cadastroForm').submit();
+        }
+
+        function excluirMensagem() {
+            const id = document.getElementById('cadastroForm').getAttribute('data-id');
+            if (confirm('Tem certeza que deseja excluir esta mensagem?')) {
+                window.location.href = '/excluir_email/' + id;
+            }
+        }
+    </script>
+</body>
+</html>
