@@ -19,13 +19,31 @@ wppconnect
       if (!matches || matches.length !== 3) {
         return;
       }
-      const buffer = Buffer.from(matches[2], 'base64');
-      fs.writeFileSync(path.join(__dirname, 'static', 'out.png'), buffer, 'binary');
-      const statusInfo = {
-        logado: false,
-        data: new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
-      };
-      fs.writeFileSync(path.join(__dirname, 'static', 'status.json'), JSON.stringify(statusInfo, null, 2));
+      const staticDir = path.join(__dirname, 'static');
+      if (!fs.existsSync(staticDir)) {
+        fs.mkdirSync(staticDir, { recursive: true });
+      }
+
+      try {
+        const buffer = Buffer.from(matches[2], 'base64');
+      
+        const staticDir = path.join(__dirname, 'static');
+        if (!fs.existsSync(staticDir)) {
+          fs.mkdirSync(staticDir, { recursive: true });
+        }
+      
+        const filePath = path.join(staticDir, 'out.png');
+        fs.writeFileSync(filePath, buffer, 'binary');
+        console.log('✅ QR Code salvo em:', filePath);
+      
+        const statusInfo = {
+          logado: false,
+          data: new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
+        };
+        fs.writeFileSync(path.join(staticDir, 'status.json'), JSON.stringify(statusInfo, null, 2));
+      } catch (error) {
+        console.error('❌ Erro ao salvar QR Code:', error);
+      }
     },
     statusFind: (statusSession, session) => {
         console.log('Status da sessão: ', statusSession);
