@@ -112,6 +112,23 @@ app.use('/static', express.static(path.join(__dirname, 'static')));
 
 // 4. Inicia o servidor Express para ouvir as requisições do Flask
 const PORT = 3000;
+app.get('/', (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+      <meta charset="UTF-8" />
+      <title>QR Code WhatsApp</title>
+    </head>
+    <body style="text-align: center; font-family: sans-serif; margin-top: 50px;">
+      <h1>QR Code para Conexão WhatsApp</h1>
+      <img src="/static/out.png" alt="QR Code" style="width: 300px; border: 1px solid #ccc;" />
+      <p>Status da Sessão: <a href="/static/status.json" target="_blank">Ver status</a></p>
+      <p>Atualize a página se o QR expirar.</p>
+    </body>
+    </html>
+  `);
+});
 app.listen(PORT, () => {
   console.log(`🚀 Servidor Node.js para WhatsApp rodando na porta ${PORT}`);
 });
