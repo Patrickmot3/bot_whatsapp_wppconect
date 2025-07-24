@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: bot-whatsapp-wppconect
+    env: node
+    buildCommand: |
+      apt-get update && \
+      apt-get install -y chromium && \
+      npm install
+    startCommand: node whatsapp_server.js
+    envVars:
+      - key: CHROME_BIN
+        value: /usr/bin/chromium
+      - key: PUPPETEER_EXECUTABLE_PATH
+        value: /usr/bin/chromium
