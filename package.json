@@ -13,6 +13,7 @@
   "dependencies": {
     "@wppconnect-team/wppconnect": "^1.37.3",
     "express": "^5.1.0",
+    "puppeteer": "^24.15.0",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7"
   }

@@ -1,0 +1,21 @@
+# Ignorar sessões do WhatsApp (muito importante!)
+tokens/
+
+# Ignorar dependências (Render instala com base no package.json)
+node_modules/
+
+# Ambientes virtuais Python
+.venv/
+__pycache__/
+
+# Banco de dados (opcional, se não quiser subir)
+cadastro.db
+
+# Arquivos temporários Excel
+*.xlsx
+
+# Logs e arquivos temporários
+*.log
+.env
+static/out.png
+static/status.json

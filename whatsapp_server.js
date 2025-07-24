@@ -13,6 +13,9 @@ let wppClient; // Variável para armazenar o cliente conectado
 wppconnect
   .create({
     session: 'sessionName321',
+    browserArgs: ['--no-sandbox'],
+    headless: true,
+    useChrome: false,  // IMPORTANTE: força uso do Chromium interno
     catchQR: (base64Qr, asciiQR) => {
       console.log('✅ QR Code Recebido. Salve a imagem e atualize o status.');
       const matches = base64Qr.match(/^data:([A-Za-z-+/]+);base64,(.+)$/);
